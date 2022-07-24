@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "../../components/Button/Button";
-import Flex from "../../components/Flex/Flex";
+import Flex from "../../components/Box/Flex";
 import useWalletModal from "./useWalletModal";
 
 export default {
@@ -8,7 +8,7 @@ export default {
   argTypes: {},
 };
 
-export const Connected: React.FC = () => {
+export const Wallet: React.FC = () => {
   const { onPresentConnectModal, onPresentAccountModal } = useWalletModal(
     () => null,
     () => null,

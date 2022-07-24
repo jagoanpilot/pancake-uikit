@@ -62,7 +62,9 @@ const Toast: React.FC<ToastProps> = ({ toast, onRemove, style, ttl, ...props }) 
   return (
     <CSSTransition nodeRef={ref} timeout={250} style={style} {...props}>
       <StyledToast ref={ref} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-        <Alert title={title} description={description} variant={alertTypeMap[type]} onClick={handleRemove} />
+        <Alert title={title} variant={alertTypeMap[type]} onClick={handleRemove}>
+          {description}
+        </Alert>
       </StyledToast>
     </CSSTransition>
   );

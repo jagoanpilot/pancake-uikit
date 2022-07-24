@@ -1,3 +1,20 @@
+import { LinkStatus } from "./types";
+
+export const status = {
+  LIVE: <LinkStatus>{
+    text: "LIVE",
+    color: "failure",
+  },
+  SOON: <LinkStatus>{
+    text: "SOON",
+    color: "warning",
+  },
+  NEW: <LinkStatus>{
+    text: "NEW",
+    color: "success",
+  },
+};
+
 export const links = [
   {
     label: "Home",
@@ -22,6 +39,7 @@ export const links = [
     label: "Farms",
     icon: "FarmIcon",
     href: "/farms",
+    status: status.LIVE,
   },
   {
     label: "Pools",
@@ -37,6 +55,29 @@ export const links = [
     label: "NFT",
     icon: "NftIcon",
     href: "/nft",
+  },
+  {
+    label: "Team Battle",
+    icon: "TeamBattleIcon",
+    href: "/competition",
+    status: status.SOON,
+  },
+  {
+    label: "Profile & Teams",
+    icon: "GroupsIcon",
+    status: status.LIVE,
+    items: [
+      {
+        label: "Leaderboard",
+        href: "/teams",
+        status: status.NEW,
+      },
+      {
+        label: "YourProfile",
+        href: "/",
+      },
+    ],
+    calloutClass: "rainbow",
   },
   {
     label: "Info",
@@ -102,41 +143,16 @@ export const socials = [
   {
     label: "Telegram",
     icon: "TelegramIcon",
-    items: [
-      {
-        label: "English",
-        href: "https://t.me/pancakeswap",
-      },
-      {
-        label: "Bahasa Indonesia",
-        href: "https://t.me/PancakeSwapIndonesia",
-      },
-      {
-        label: "中文",
-        href: "https://t.me/PancakeSwap_CN",
-      },
-      {
-        label: "Tiếng Việt",
-        href: "https://t.me/PancakeSwapVN",
-      },
-      {
-        label: "Announcements",
-        href: "https://t.me/PancakeSwapAnn",
-      },
-      {
-        label: "Whale Alert",
-        href: "https://t.me/PancakeSwapWhales",
-      },
-    ],
+    href: "	https://t.me/tyzeninfo"
   },
   {
     label: "Twitter",
     icon: "TwitterIcon",
-    href: "https://twitter.com/pancakeswap",
+    href: "https://twitter.com/TyzenIo",
   },
 ];
 
-export const MENU_HEIGHT = 64;
+export const MENU_HEIGHT = 80;
 export const MENU_ENTRY_HEIGHT = 48;
 export const SIDEBAR_WIDTH_FULL = 240;
 export const SIDEBAR_WIDTH_REDUCED = 56;

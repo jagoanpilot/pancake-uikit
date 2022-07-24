@@ -1,5 +1,6 @@
 import React from "react";
 import Text from "./Text";
+import TooltipText from "./TooltipText";
 
 export default {
   title: "Components/Text",
@@ -43,12 +44,32 @@ export const Default: React.FC = () => {
     <div>
       <Text>Default</Text>
       <Text bold>Bold text</Text>
+      <Text small>Small text</Text>
       <Text fontSize="24px">Custom fontsize</Text>
       <Text color="red">Custom color</Text>
       <Text color="primary">Custom color from theme</Text>
       <Text color="secondary" textTransform="uppercase">
         with text transform
       </Text>
+      <Text textAlign="center">center</Text>
+      <Text display="inline" color="textSubtle" textTransform="uppercase">
+        Example of{" "}
+      </Text>
+      <Text display="inline" bold textTransform="uppercase">
+        inline{" "}
+      </Text>
+      <Text display="inline" color="textSubtle" textTransform="uppercase">
+        Text
+      </Text>
+    </div>
+  );
+};
+
+export const TooltipTextVariant: React.FC = () => {
+  return (
+    <div>
+      <Text>Use TooltipText for text that has tooltip, it accepts the same props as normal Text component</Text>
+      <TooltipText>Example</TooltipText>
     </div>
   );
 };

@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import debounce from "lodash/debounce";
+import throttle from "lodash/throttle";
 import Overlay from "../../components/Overlay/Overlay";
+import Flex from "../../components/Box/Flex";
 import { useMatchBreakpoints } from "../../hooks";
-import Logo from "./Logo";
-import Panel from "./Panel";
-import UserBlock from "./UserBlock";
+import Logo from "./components/Logo";
+import Panel from "./components/Panel";
+import UserBlock from "./components/UserBlock";
 import { NavProps } from "./types";
+import Avatar from "./components/Avatar";
 import { MENU_HEIGHT, SIDEBAR_WIDTH_REDUCED, SIDEBAR_WIDTH_FULL } from "./config";
 
 const Wrapper = styled.div`
@@ -40,10 +42,13 @@ const BodyWrapper = styled.div`
 const Inner = styled.div<{ isPushed: boolean; showMenu: boolean }>`
   flex-grow: 1;
   margin-top: ${({ showMenu }) => (showMenu ? `${MENU_HEIGHT}px` : 0)};
-  transition: margin-top 0.2s;
+  transition: margin-top 0.2s, margin-left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translate3d(0, 0, 0);
+  max-width: 100%;
+
   ${({ theme }) => theme.mediaQueries.nav} {
     margin-left: ${({ isPushed }) => `${isPushed ? SIDEBAR_WIDTH_FULL : SIDEBAR_WIDTH_REDUCED}px`};
+    max-width: ${({ isPushed }) => `calc(100% - ${isPushed ? SIDEBAR_WIDTH_FULL : SIDEBAR_WIDTH_REDUCED}px)`};
   }
 `;
 
@@ -66,7 +71,9 @@ const Menu: React.FC<NavProps> = ({
   setLang,
   currentLang,
   cakePriceUsd,
+  ytyzenPriceUsd,
   links,
+  profile,
   children,
 }) => {
   const { isXl } = useMatchBreakpoints();
@@ -78,20 +85,29 @@ const Menu: React.FC<NavProps> = ({
   useEffect(() => {
     const handleScroll = () => {
       const currentOffset = window.pageYOffset;
-      if (currentOffset < refPrevOffset.current) {
-        // Has scroll up
+      const isBottomOfPage = window.document.body.clientHeight === currentOffset + window.innerHeight;
+      const isTopOfPage = currentOffset === 0;
+      // Always show the menu when user reach the top
+      if (isTopOfPage) {
         setShowMenu(true);
-      } else {
-        // Has scroll down
-        setShowMenu(false);
+      }
+      // Avoid triggering anything at the bottom because of layout shift
+      else if (!isBottomOfPage) {
+        if (currentOffset < refPrevOffset.current) {
+          // Has scroll up
+          setShowMenu(true);
+        } else {
+          // Has scroll down
+          setShowMenu(false);
+        }
       }
       refPrevOffset.current = currentOffset;
     };
-    const debouncedHandleScroll = debounce(handleScroll, 300, { leading: true, trailing: true });
+    const throttledHandleScroll = throttle(handleScroll, 200);
 
-    window.addEventListener("scroll", debouncedHandleScroll);
+    window.addEventListener("scroll", throttledHandleScroll);
     return () => {
-      window.removeEventListener("scroll", debouncedHandleScroll);
+      window.removeEventListener("scroll", throttledHandleScroll);
     };
   }, []);
 
@@ -107,7 +123,10 @@ const Menu: React.FC<NavProps> = ({
           isDark={isDark}
           href={homeLink?.href ?? "/"}
         />
-        <UserBlock account={account} login={login} logout={logout} />
+        <Flex>
+          <UserBlock account={account} login={login} logout={logout} />
+          {/* {profile && <Avatar profile={profile} />} */}
+        </Flex>
       </StyledNav>
       <BodyWrapper>
         <Panel
@@ -120,6 +139,7 @@ const Menu: React.FC<NavProps> = ({
           setLang={setLang}
           currentLang={currentLang}
           cakePriceUsd={cakePriceUsd}
+          ytyzenPriceUsd={ytyzenPriceUsd}
           pushNav={setIsPushed}
           links={links}
         />

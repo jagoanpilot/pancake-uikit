@@ -1,19 +1,14 @@
-import React from "react";
+import { capitalize } from "lodash";
+import React, { useState } from "react";
+import { BrowserRouter, Link } from "react-router-dom";
 import styled from "styled-components";
-import capitalize from "lodash/capitalize";
-import { LogoIcon, AddIcon } from "../Svg";
-import Button from "./Button";
+import Box from "../Box/Box";
+import Flex from "../Box/Flex";
+import { AddIcon, AutoRenewIcon, LogoIcon } from "../Svg";
 import IconButton from "./IconButton";
-import { variants } from "./types";
-
-const Row = styled.div`
-  margin-bottom: 32px;
-
-  & > button + button,
-  & > a + a {
-    margin-left: 16px;
-  }
-`;
+import Button from "./Button";
+import { ExpandableButton, ExpandableLabel } from "./ExpandableButton";
+import { scales, variants } from "./types";
 
 export default {
   title: "Components/Button",
@@ -21,114 +16,145 @@ export default {
   argTypes: {},
 };
 
+const Row = styled(Flex)`
+  margin-bottom: 32px;
+  & > button + button,
+  & > a + a {
+    margin-left: 16px;
+  }
+`;
+
 export const Default: React.FC = () => {
   return (
     <>
-      {Object.values(variants).map((variant) => (
-        <Row key={variant}>
-          <Button variant={variant}>{capitalize(variant)}</Button>
-          <Button variant={variant} disabled>
-            Disabled
-          </Button>
-          <Button variant={variant} size="sm">
-            Small
+      <Box mb="32px">
+        <button type="button">Unstyled Button</button>
+      </Box>
+      <Box mb="32px">
+        {Object.values(variants).map((variant) => {
+          return (
+            <Box key={variant} mb="32px">
+              {Object.values(scales).map((scale) => {
+                return (
+                  <Button key={scale} variant={variant} scale={scale} mr="8px">
+                    {`${capitalize(variant)} ${scale.toUpperCase()}`}
+                  </Button>
+                );
+              })}
+            </Box>
+          );
+        })}
+      </Box>
+      <Box>
+        <Button mr="8px" disabled>
+          Disabled
+        </Button>
+        <Button variant="secondary" disabled>
+          Disabled
+        </Button>
+      </Box>
+    </>
+  );
+};
+
+export const Anchors: React.FC = () => {
+  return (
+    <>
+      <Box mb="32px">
+        {Object.values(variants).map((variant) => {
+          return (
+            <Box key={variant} mb="32px">
+              {Object.values(scales).map((scale) => {
+                return (
+                  <Button
+                    as="a"
+                    href="https://pancakeswap.finance"
+                    key={scale}
+                    variant={variant}
+                    scale={scale}
+                    external
+                    mr="8px"
+                  >
+                    {`${capitalize(variant)} anchor ${scale.toUpperCase()}`}
+                  </Button>
+                );
+              })}
+            </Box>
+          );
+        })}
+      </Box>
+      <Box>
+        <Button as="a" href="https://pancakeswap.finance" mr="8px" external disabled>
+          Disabled
+        </Button>
+        <Button as="a" href="https://pancakeswap.finance" variant="secondary" external disabled>
+          Disabled
+        </Button>
+      </Box>
+    </>
+  );
+};
+
+export const Variants: React.FC = () => {
+  return (
+    <Box width="640px">
+      <BrowserRouter>
+        <Row>
+          <Button as={Link} to="/router-link" variant="secondary">
+            As an React Router link
           </Button>
         </Row>
-      ))}
-    </>
+        <Row>
+          <Button width="100%">Full size</Button>
+        </Row>
+        <Row>
+          <Button isLoading endIcon={<AutoRenewIcon spin color="currentColor" />}>
+            Approving
+          </Button>
+          <Button isLoading variant="success">
+            Approving
+          </Button>
+        </Row>
+        <Row>
+          <Button startIcon={<LogoIcon />}>Start Icon</Button>
+          <Button endIcon={<LogoIcon />}>End Icon</Button>
+          <Button startIcon={<LogoIcon />} endIcon={<LogoIcon />}>
+            Start & End Icon
+          </Button>
+        </Row>
+        <Row>
+          <IconButton>
+            <LogoIcon />
+          </IconButton>
+          <IconButton variant="secondary">
+            <AddIcon />
+          </IconButton>
+        </Row>
+        <Row>
+          <IconButton scale="sm" variant="danger">
+            <LogoIcon />
+          </IconButton>
+          <IconButton scale="sm" variant="success">
+            <AddIcon color="currentColor" />
+          </IconButton>
+        </Row>
+      </BrowserRouter>
+    </Box>
   );
 };
 
-export const ButtonLink: React.FC = () => {
+export const Expandable: React.FC = () => {
+  const [expanded, setExpanded] = useState(false);
   return (
-    <>
-      <Row>
-        <Button as="a" href="https://pancakeswap.finance" target="_blank" rel="noreferrer">
-          Primary
-        </Button>
-        <Button as="a" disabled>
-          Disabled
-        </Button>
-        <Button as="a" size="sm">
-          Small
-        </Button>
-      </Row>
-      <Row>
-        <Button as="a" variant="secondary">
-          Secondary
-        </Button>
-        <Button as="a" variant="secondary" disabled>
-          Disabled
-        </Button>
-        <Button as="a" variant="secondary" size="sm">
-          Small
-        </Button>
-      </Row>
-      <Row>
-        <Button as="a" variant="tertiary">
-          Tertiary
-        </Button>
-        <Button as="a" variant="tertiary" disabled>
-          Disabled
-        </Button>
-        <Button as="a" variant="tertiary" size="sm">
-          Small
-        </Button>
-      </Row>
-      <Row>
-        <Button as="a" variant="text">
-          Text
-        </Button>
-        <Button as="a" variant="text" disabled>
-          Disabled
-        </Button>
-        <Button as="a" variant="text" size="sm">
-          Small
-        </Button>
-      </Row>
-    </>
-  );
-};
-
-export const WithProps: React.FC = () => {
-  return (
-    <Row>
-      <Button fullWidth>Full size</Button>
-    </Row>
-  );
-};
-
-export const WithIcon: React.FC = () => {
-  return (
-    <Row>
-      <Button startIcon={<LogoIcon />}>Start Icon</Button>
-      <Button endIcon={<LogoIcon />}>End Icon</Button>
-      <Button startIcon={<LogoIcon />} endIcon={<LogoIcon />}>
-        Start & End Icon
-      </Button>
-    </Row>
-  );
-};
-
-export const Icons: React.FC = () => {
-  return (
-    <>
-      <Row>
-        <IconButton>
-          <LogoIcon />
-        </IconButton>
-        <IconButton>
-          <AddIcon />
-        </IconButton>
-      </Row>
-      <Row>
-        <IconButton size="sm">
-          <LogoIcon />
-        </IconButton>
-        <IconButton size="sm">
-          <AddIcon />
-        </IconButton>
-      </Row>
-    </>
+    <Box width="640px">
+      <BrowserRouter>
+        <Row>
+          <ExpandableButton expanded={expanded} onClick={() => setExpanded((prev) => !prev)} />
+          <ExpandableLabel expanded={expanded} onClick={() => setExpanded((prev) => !prev)}>
+            ExpandableLabel
+          </ExpandableLabel>
+        </Row>
+      </BrowserRouter>
+    </Box>
   );
 };

@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export const types = {
   SUCCESS: "success",
   DANGER: "danger",
@@ -11,7 +13,7 @@ export interface Toast {
   id: string;
   type: Types;
   title: string;
-  description?: string;
+  description?: ReactNode;
 }
 
 export interface ToastContainerProps {

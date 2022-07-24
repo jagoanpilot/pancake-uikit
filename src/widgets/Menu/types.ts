@@ -1,8 +1,18 @@
+import { Colors } from "../../theme/types";
 import { Login } from "../WalletModal/types";
 
-export interface LangType {
+export interface Language {
   code: string;
   language: string;
+  locale?: string;
+}
+
+export interface Profile {
+  username?: string;
+  image?: string;
+  profileLink: string;
+  noProfileLink: string;
+  showPip?: boolean;
 }
 
 export interface PushedProps {
@@ -12,12 +22,18 @@ export interface PushedProps {
 
 export interface NavTheme {
   background: string;
-  hover: string;
+}
+
+export interface LinkStatus {
+  text: string;
+  color: keyof Colors;
 }
 
 export interface MenuSubEntry {
   label: string;
   href: string;
+  calloutClass?: string;
+  status?: LinkStatus;
 }
 
 export interface MenuEntry {
@@ -25,21 +41,25 @@ export interface MenuEntry {
   icon: string;
   items?: MenuSubEntry[];
   href?: string;
+  calloutClass?: string;
   initialOpenState?: boolean;
+  status?: LinkStatus;
 }
 
 export interface PanelProps {
   isDark: boolean;
   toggleTheme: (isDark: boolean) => void;
   cakePriceUsd?: number;
+  ytyzenPriceUsd?: number;
   currentLang: string;
-  langs: LangType[];
-  setLang: (lang: LangType) => void;
+  langs: Language[];
+  setLang: (lang: Language) => void;
   links: Array<MenuEntry>;
 }
 
 export interface NavProps extends PanelProps {
   account?: string;
   login: Login;
+  profile?: Profile;
   logout: () => void;
 }
